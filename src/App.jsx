@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import NotFound from "./pages/NotFound";
+import { AuthProvider, useAuth } from "./components/Auth";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
+import RequireAuth from "./components/RequireAuth";
+import Add from './components/Add';
+import Edit from "./components/Edit";
+import Dashboard from './components/Dashboard/Dashboard';
+import Deposits from './components/Dashboard/Deposits';
+import Orders from './components/Dashboard/Order';
+import Title from './components/Dashboard/Title';
+import Teachers from './pages/Teachers';
+import Main from './components/teachers/Main';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
+    <Router>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+        <AuthProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  <Dashboard />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <RequireAuth>
+                  <Profile />
+                </RequireAuth>
+              }
+            />
+            <Route path="/main" element={<Main />}/>
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/add" element={<Add />} />
+            <Route path="/edit/:id" element={<Edit />} />
 
-export default App
+            <Route path="/deposits" element={<Deposits />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/title" element={<Title />} />
+          </Routes>
+        </AuthProvider>
+      </div>
+    </Router>
+  );
+};
+
+export default App;
